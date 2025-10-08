@@ -1,10 +1,10 @@
 const express = require('express');
-const fetch = require('node-fetch');
+const fetch = require('node-fetch'); // ez kell a Node.js-hez
 const app = express();
 
 const PORT = process.env.PORT || 3000;
 
-// CORS minden válaszhoz
+// CORS middleware
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS');
@@ -19,11 +19,9 @@ app.get('/proxy', async (req, res) => {
     const { id } = req.query;
     if (!id) return res.status(400).json({ error: 'Missing id parameter' });
 
-    // Logoljuk, hogy melyik URL-t hívja a szerver
     console.log(`Fetching API for id: ${id}`);
-    
     const apiRes = await fetch(`https://api.gpplugins.com:2096/val/getLogs?id=${id}`);
-    
+
     if (!apiRes.ok) {
       console.error(`API returned status ${apiRes.status}`);
       return res.status(502).json({ error: 'API request failed' });
